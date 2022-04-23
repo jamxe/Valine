@@ -3,6 +3,7 @@
  * (c) 2017-2021 xCss
  * Released under the GPL-2.0 License.
  * Last Update: 2021-10-19 6:07:44 ├F10: PM┤
+ * Modify by HCLonely
  */
 !function(e, t) {
     "object" == typeof exports && "object" == typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? exports.Valine = t() : e.Valine = t();

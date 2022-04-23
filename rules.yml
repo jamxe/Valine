@@ -24,3 +24,7 @@ email-rule: # 邮箱检测规则替换
 style: # 添加样式
   raw: '.vcards .vcard .vhead .vnick'
   changed: '.vcards .vcard .vhead .vtag{font-size:12px;display:inline-block;line-height:20px;border-radius:2px;color:#fff;padding:0 5px;position:inherit;margin-left:-5px;} .vcards .vcard .vhead .vtag.vmaster{background:#ffa51e} .vcards .vcard .vhead .vtag.vfriend{background:#6cf} .vcards .vcard .vhead .vtag.vvisitor{background:#828282} .vcards .vcard .vhead .browser-icon, .vcards .vcard .vhead .os-icon{margin-right:3px;} .vcards .vcard .vhead .vnick'
+
+metaPlaceholder:
+  raw: "'\" placeholder=\"' + e.i18n.t(t)"
+  changed: "'\" placeholder=\"' + (e.cfg.metaPlaceholder[t] || e.i18n.t(t))"

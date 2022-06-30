@@ -8,7 +8,7 @@ os-icon: # 添加设备图标
 
 friends-icon1: # 添加博主、朋友、访客等功能
   raw: 't.get("url") + "</a>");'
-  changed: "t.get(\"url\") + \"</a>\");\nvar ism = e.cfg.master.includes((0, s.default)(t.get(\"mail\"))), isf = e.cfg.friends.includes((0, s.default)(t.get(\"mail\").toLowerCase())), gat = ism ? '<span class=\"vtag vmaster\">' + e.cfg.tagMeta[0] + \"</span>\" : isf ? '<span class=\"vtag vfriend\">' + e.cfg.tagMeta[1] + \"</span>\" : '<span class=\"vtag vvisitor\">' + e.cfg.tagMeta[2] + \"</span>\";"
+  changed: "t.get(\"url\") + \"</a>\");\nvar ism = e.cfg.master.includes((0, u.default)(t.get(\"mail\"))), isf = e.cfg.friends.includes((0, u.default)(t.get(\"mail\").toLowerCase())), gat = ism ? '<span class=\"vtag vmaster\">' + e.cfg.tagMeta[0] + \"</span>\" : isf ? '<span class=\"vtag vfriend\">' + e.cfg.tagMeta[1] + \"</span>\" : '<span class=\"vtag vvisitor\">' + e.cfg.tagMeta[2] + \"</span>\";"
 friends-icon2: # 添加博主、朋友、访客等功能
   raw: "'\" target=\"_blank\" >' + l + \"</a>\" : '<span class=\"vnick\">' + l + \"</span>\""
   changed: "'\" target=\"_blank\" >' + l + \"</a>\" + gat : '<span class=\"vnick\">' + l + \"</span>\" + gat"

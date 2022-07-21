@@ -1,8 +1,8 @@
 /*!
- * Valine v1.5.0
+ * Valine v1.5.1
  * (c) 2017-2022 xCss
  * Released under the GPL-2.0 License.
- * Last Update: 2022-6-24 5:33:28 ├F10: PM┤
+ * Last Update: 2022-7-21 3:43:59 ├F10: PM┤
  */
 !function(e, t) {
     "object" == typeof exports && "object" == typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? exports.Valine = t() : e.Valine = t();
@@ -507,7 +507,7 @@
         }, t.defaultMeta = [ "nick", "mail", "link" ], t.QQCacheKey = "_v_Cache_Q", 
         t.MetaCacheKey = "_v_Cache_Meta", t.RandomStr = function(e) {
             return (Date.now() + Math.round(1e3 * Math.random())).toString(32);
-        }, t.VERSION = "1.5.0";
+        }, t.VERSION = "1.5.1";
     }, function(e, t, n) {
         function r(e, t) {
             return new o(t).process(e);
@@ -1515,14 +1515,16 @@
             for (var y in m) m.hasOwnProperty(y) && function() {
                 var t = m[y], n = e.$el.find("." + y);
                 v[t] = n, n.on("input change blur propertychange", function(r) {
-                    e.cfg.enableQQ && "blur" === r.type && "nick" === t && (isNaN(n.val()) ? A.default.store.get(h.QQCacheKey) && A.default.store.get(h.QQCacheKey).nick != n.val() && (A.default.store.remove(h.QQCacheKey), 
-                    S.nick = n.val(), S.mail = "", S.QQAvatar = "") : (0, b.fetchQQFn)(n.val(), function(e) {
+                    e.cfg.enableQQ && "blur" === r.type && "nick" === t && (n.val() && !isNaN(n.val()) ? (0, 
+                    b.fetchQQFn)(n.val(), function(e) {
                         var t = e.nick || n.val(), r = e.qq + "@qq.com";
                         (0, A.default)(".vnick").val(t), (0, A.default)(".vmail").val(r), 
                         S.nick = t, S.mail = r, S.QQAvatar = e.pic;
-                    })), "comment" === t ? ((0, l.default)(n[0]), D(function(e) {
+                    }) : A.default.store.get(h.QQCacheKey) && A.default.store.get(h.QQCacheKey).nick != n.val() && (A.default.store.remove(h.QQCacheKey), 
+                    S.nick = n.val(), S.mail = "", S.QQAvatar = "")), "comment" === t ? ((0, 
+                    l.default)(n[0]), D(function(e) {
                         f(n);
-                    })()) : S[t] = A.default.escape(n.val().replace(/(^\s*)|(\s*$)/g, "")).substring(0, 20);
+                    })()) : S[t] = (0, C.default)(n.val().replace(/(^\s*)|(\s*$)/g, "").substring(0, 35));
                 });
             }();
             var D = function(e) {
@@ -1589,7 +1591,7 @@
                 o && !/ja/.test(e.cfg.lang) && (o = A.default.detect(o), a = o.version ? o.os ? '<span class="vsys">' + o.browser + " " + o.version + '</span> <span class="vsys">' + o.os + " " + o.osVersion + "</span>" : "" : '<span class="vsys">' + o.browser + "</span>"), 
                 "*" === e.cfg.path && (a = '<a href="' + t.get("url") + '" class="vsys">' + t.get("url") + "</a>");
                 var s = t.get("link") ? /^https?\:\/\//.test(t.get("link")) ? t.get("link") : "http://" + t.get("link") : "", l = A.default.escape((0, 
-                C.default)(t.get("nick").substring(0, 20))), c = s ? '<a class="vnick" rel="nofollow" href="' + j(s) + '" target="_blank" >' + l + "</a>" : '<span class="vnick">' + l + "</span>", f = $.hide ? "" : e.cfg.enableQQ && t.get("QQAvatar") ? (0, 
+                C.default)(t.get("nick").substring(0, 30))), c = s ? '<a class="vnick" rel="nofollow" href="' + j(s) + '" target="_blank" >' + l + "</a>" : '<span class="vnick">' + l + "</span>", f = $.hide ? "" : e.cfg.enableQQ && t.get("QQAvatar") ? (0, 
                 C.default)('<img class="vimg" src="' + j(t.get("QQAvatar")) + '" referrerPolicy="no-referrer"/>') : '<img class="vimg" src="' + ($.cdn + (0, 
                 u.default)(t.get("mail")) + $.params) + '">', p = f + '<div class="vh"><div class="vhead">' + c + " " + a + '</div><div class="vmeta"><span class="vtime" >' + (0, 
                 g.default)(t.get("insertedAt"), e.i18n) + '</span><span class="vat" data-vm-id="' + (t.get("rid") || t.id) + '" data-self-id="' + t.id + '">' + e.i18n.t("reply") + '</span></div><div class="vcontent" data-expand="' + e.i18n.t("expand") + '">' + (0, 
@@ -1705,6 +1707,7 @@
                 });
             };
             M.on("click", L), (0, A.default)(document).on("keydown", function(e) {
+                e = window.event || e;
                 var t = e.keyCode || e.which || e.charCode;
                 ((e.ctrlKey || e.metaKey) && 13 === t && L(), 9 === t) && ("veditor" == (document.activeElement.id || "") && (e.preventDefault(), 
                 w(o[0], "    ")));
@@ -1715,24 +1718,21 @@
                 e.stopPropagation(), e.preventDefault(), "drop" === e.type && Q(e.dataTransfer.items);
             });
             var Q = function(e, t) {
-                for (var n = [], r = 0, i = e.length; r < i; r++) {
-                    var a = e[r];
-                    if ("string" === a.kind && a.type.match("^text/html")) !t && a.getAsString(function(e) {
+                for (var n = 0, r = e.length; n < r; n++) {
+                    var i = e[n];
+                    if ("string" === i.kind && i.type.match("^text/html")) !t && i.getAsString(function(e) {
                         e && w(o[0], e.replace(/<[^>]+>/g, ""));
-                    }); else if (-1 !== a.type.indexOf("image")) {
-                        n.push(a.getAsFile());
+                    }); else if (i.type.indexOf("image") > -1) {
+                        q(i.getAsFile());
                         continue;
                     }
                 }
-                q(n);
-            }, q = function(e, t) {
-                if (t = t || 0, e.length > 0) try {
-                    var n = e[t], r = URL.createObjectURL(n), i = "![" + n.name + "](" + r + ")";
-                    w(o[0], i);
-                    var a = new FileReader();
-                    a.onload = function() {
-                        B[r] = a.result;
-                    }, a.readAsDataURL(n);
+            }, q = function(e) {
+                try {
+                    var t = URL.createObjectURL(e), n = "![image](" + t + ") ", r = new FileReader();
+                    w(o[0], n), r.onload = function() {
+                        B[t] = r.result;
+                    }, r.readAsDataURL(e);
                 } catch (e) {}
             };
         }, e.exports = o, e.exports.default = o;
@@ -1873,20 +1873,22 @@
             });
         }, u = function(e) {
             i.default.ajax({
-                url: "//api.ip.sb/jsonip",
-                method: "jsonp"
+                url: "https://forge.speedtest.cn/api/location/info",
+                method: "get"
+            }).then(function(e) {
+                return e.json();
             }).then(function(t) {
-                e(t.ip);
+                e && e(t.ip);
             });
         };
         t.fetchQQFn = a, t.recordIPFn = u;
     }, function(e, t, n) {
         "use strict";
         t.__esModule = !0, t.default = function(e, t) {
-            if (!e) return "";
+            if (!e) return "Invalid Date.";
             try {
                 var n = i(e).getTime();
-                if (isNaN(n)) return "Time format error.";
+                if (isNaN(n)) return "Invalid Date.";
                 var o = new Date().getTime(), a = o - n, u = Math.floor(a / 864e5);
                 if (0 === u) {
                     var s = a % 864e5, l = Math.floor(s / 36e5);
@@ -2065,8 +2067,13 @@
             }, e), new Promise(function(t, n) {
                 if ("jsonp" == e.method) {
                     var r = "cb_" + (Date.now() + Math.round(1e3 * Math.random())).toString(32), i = document, o = i.body, u = i.createElement("script");
-                    return e.body.callback = r, e.body.t = Date.now(), u.src = e.url + "?" + a(e.body), 
-                    window[r] = function(e) {
+                    return u.async = !0, u.defer = !0, e.url.indexOf("?") > -1 ? e.url += "&" + a({
+                        callback: r,
+                        t: Date.now()
+                    }) : e.url += "?" + a({
+                        callback: r,
+                        t: Date.now()
+                    }), u.src = e.url, window[r] = function(e) {
                         window[r] = null, o.removeChild(u), t(e);
                     }, void o.appendChild(u);
                 }
@@ -2102,20 +2109,21 @@
                         }
                     };
                 };
-                e.url = e.url + "?" + ("get" == e.method ? a(e.body) : ""), s.open(e.method || "get", e.url, !0), 
+                a(e.body) && (e.url = e.url + "?" + ("get" == e.method ? a(e.body) : "")), 
+                s.open(e.method || "get", e.url), "blob" == e.dataType && (s.responseType = "blob"), 
                 s.onload = function() {
                     s.getAllResponseHeaders().replace(/^(.*?):[^\S\n]*([\s\S]*?)$/gm, function(e, t, n) {
                         l.push(t = t.toLowerCase()), c.push([ t, n ]), f[t] = f[t] ? f[t] + "," + n : n;
                     }), t(p());
                 }, s.onerror = n, s.withCredentials = "include" == e.credentials;
                 for (var d in e.headers) s.setRequestHeader(d, e.headers[d]);
-                s.send("post" == e.method ? e.body : "get" == e.method ? null : a(e.body));
+                s.send("post" == e.method ? e.body : "get" == e.method ? "" : a(e.body));
             });
         };
         var o = encodeURIComponent, a = function(e) {
             var t = [];
             for (var n in e) e.hasOwnProperty(n) && t.push(o(n) + "=" + o(e[n]));
-            return (t = t.join("&").replace(/%20/g, "+")) || null;
+            return (t = t.join("&").replace(/%20/g, "+")) || "";
         };
     }, function(e, t, n) {
         "use strict";
